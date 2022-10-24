@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Мої застосунки
+    'pizzaConstructorApp',
+
+    # Джанго застосунки
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
