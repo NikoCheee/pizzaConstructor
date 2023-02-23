@@ -12,6 +12,7 @@
 
 """
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 
 # class Category(models.Model):
@@ -37,16 +38,32 @@ class Ingredient(models.Model):
         return self.name
 
 
-class Pizza(models.Model):  # перейменувати у клас сайз
-    pizza30cm = 'Піцца 30 см'
-    pizza40cm = 90
-    PIZZA_SIZE_CHOICES = [
-        (pizza30cm, 'Піцца 30 см'),
-        (pizza40cm, 'Піцца 40 см'),
-    ]
-    size = models.CharField(max_length=11, choices=PIZZA_SIZE_CHOICES, default=pizza30cm)
-    toppings = models.ManyToManyField(Ingredient)
-    total_cost = models.DecimalField(max_digits=5, decimal_places=2)
+class Size(models.Model):  # зробити тут розміри піцц, а не у самій піцці
+    size = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return self.toppings
+        return self.size
+
+class Pizza(models.Model):  # перейменувати у клас сайз
+    # pizza30cm = '30'
+    # pizza40cm = '40'
+    # PIZZA_SIZE_CHOICES = [
+    #     (pizza30cm, 'Піцца 30 см'),
+    #     (pizza40cm, 'Піцца 40 см'),
+    # ]
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    toppings = models.ManyToManyField(Ingredient, through='PizzaToppings')
+    # total_cost = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f"pizza + топпінги"
+
+
+class PizzaToppings(models.Model):
+    topping = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    topping_quantity = models.SmallIntegerField(validators=[MaxValueValidator(10, message='Test')])
+    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.topping} у піцці № {self.pizza.pk}, {self.topping_quantity} штук'

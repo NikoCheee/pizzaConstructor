@@ -22,8 +22,6 @@ import pizzaConstructorApp.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('pizzaConstructorApp.urls')),  # тут треба редайрект в'ю
-    path('', pizzaConstructorApp.views.redirect_view),  # тут треба редайрект в'ю
+    path('', pizzaConstructorApp.views.redirect_view),
     path('constructor/', include('pizzaConstructorApp.urls')),
-    # path('', include('pizzaConstructorApp.urls'),redirect('pizzaConstructorApp/index.html')),
 ]

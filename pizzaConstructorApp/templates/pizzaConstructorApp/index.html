@@ -6,5 +6,25 @@
 </head>
 <body>
 <h1>GRAC</h1>
+{% csrf_token %}
+
+<fieldset>
+    <form method="post">
+        {% csrf_token %}
+
+        {% for size in sizes %}
+            <input id="{{ size }}" type="radio" name="option">
+            <label for="{{ size }}">{{ size }}</label>
+        {% endfor %}
+
+        {% for topping in toppings %}
+            <p><input id="{{ topping }}" type="number"><label for="{{ topping }}">{{ topping }}</label></p>
+        {% endfor %}
+
+        <button type="submit" formmethod="post">Замовити піццу</button>
+    </form>
+
+</fieldset>
+
 </body>
 </html>

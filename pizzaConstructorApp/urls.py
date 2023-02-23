@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-   # path('', views.pizzaConstructorApp, name='index'),
+    # path('/grac', views.index, name='index'),
 ]
