@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -9,17 +9,22 @@
 {% csrf_token %}
 
 <fieldset>
-    <form method="post">
+    <form action="{% url 'index' %}" method="post">
         {% csrf_token %}
 
         {% for size in sizes %}
-            <input id="{{ size }}" type="radio" name="option">
+            <input id="{{ size }}" value="{{ size.id }}"  type="radio" name="size">
             <label for="{{ size }}">{{ size }}</label>
         {% endfor %}
 
-        {% for topping in toppings %}
-            <p><input id="{{ topping }}" type="number"><label for="{{ topping }}">{{ topping }}</label></p>
-        {% endfor %}
+<!--        <select  size="3" multiple>-->
+            {% for topping in toppings %}
+<!--                <p><input id="{{ topping }}" value="quantity"  type="number"><label for="{{ topping }}"></label></p>-->
+                <p><input id="{{ topping }}" value="{{ topping.id }}" name="{{topping.name}}" type="checkbox"><label for="{{ topping }}">{{topping}}</label></p>
+                <p><input name="{{topping}}_quantity" type="number"></p>
+<!--                <option value="{{ topping.name }}">{{ topping }}</option>-->
+            {% endfor %}
+<!--        </select>-->
 
         <button type="submit" formmethod="post">Замовити піццу</button>
     </form>

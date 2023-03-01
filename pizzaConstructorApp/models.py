@@ -57,7 +57,7 @@ class Pizza(models.Model):  # перейменувати у клас сайз
     # total_cost = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"pizza + топпінги"
+        return f"піцца розміром {self.size} + топпінги"
 
 
 class PizzaToppings(models.Model):
