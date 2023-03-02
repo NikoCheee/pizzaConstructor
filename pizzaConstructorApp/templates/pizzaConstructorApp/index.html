@@ -12,23 +12,25 @@
     <form action="{% url 'index' %}" method="post">
         {% csrf_token %}
 
+        <p>Оберіть розмір</p>
         {% for size in sizes %}
             <input id="{{ size }}" value="{{ size.id }}"  type="radio" name="size">
             <label for="{{ size }}">{{ size }}</label>
         {% endfor %}
 
-<!--        <select  size="3" multiple>-->
+        <p>Оберіть начінку</p>
+        {% for category in categories %}
+            <p>{{ category }}</p>
             {% for topping in toppings %}
-<!--                <p><input id="{{ topping }}" value="quantity"  type="number"><label for="{{ topping }}"></label></p>-->
-                <p><input id="{{ topping }}" value="{{ topping.id }}" name="{{topping.name}}" type="checkbox"><label for="{{ topping }}">{{topping}}</label></p>
+                {% if topping.category == category %}
+                <p><input id="{{ topping }}" value="{{ topping.id }}" name="{{topping.name}}"
+                          type="checkbox"><label for="{{ topping }}">{{topping}} - {{ topping.price }}</label></p>
                 <p><input name="{{topping}}_quantity" type="number"></p>
-<!--                <option value="{{ topping.name }}">{{ topping }}</option>-->
+                {% endif %}
             {% endfor %}
-<!--        </select>-->
-
+        {% endfor %}
         <button type="submit" formmethod="post">Замовити піццу</button>
     </form>
-
 </fieldset>
 
 </body>

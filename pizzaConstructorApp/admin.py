@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Pizza, Ingredient, PizzaToppings, Size
+from .models import PizzaOrder, Ingredient, PizzaToppings, Size, Category
 
 admin.site.register(Ingredient)
-admin.site.register(Pizza)
+admin.site.register(PizzaOrder)
 admin.site.register(PizzaToppings)
 admin.site.register(Size)
-
-# admin - 1234
+admin.site.register(Category)
