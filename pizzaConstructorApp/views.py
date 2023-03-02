@@ -7,34 +7,28 @@ from .models import Ingredient, PizzaOrder, Size, PizzaToppings, Category
 
 
 def index(request):
-
-    # model = Ingredient
     categories = Category.objects.all()
     toppings = Ingredient.objects.all()
     sizes = Size.objects.all()
     context = {'sizes': sizes, 'toppings': toppings, 'categories': categories}
+
     if request.method == 'POST':  # додати if form.valid
-        # size = Size.objects.get(request.POST.get('size'))
+        print(request.POST)
         size = request.POST.get('size')
         pizza = PizzaOrder.objects.create(size=Size.objects.get(pk=size))
 
-        # quantity = request.POST.get('topping')
-        # toppings =
         toppings_names = [x.name for x in toppings]
-        toppings_ids = []
-        topping_quantities = []
         for topping_name in toppings_names:
             if request.POST.get(topping_name):
                 id = request.POST.get(topping_name)
                 quantity = request.POST.get(f"{topping_name}_quantity")
+                price = Ingredient.objects.get(pk=id).price * int(quantity)
 
                 raw = PizzaToppings.objects.create(topping=Ingredient(pk=id), topping_quantity=quantity,
-                                                   pizza=PizzaOrder(pizza.pk))
+                                                   pizza_order=PizzaOrder(pizza.pk), cost=price)
                 raw.save()
-                # toppings_ids.append(request.POST.get(topping_name))
 
-        return HttpResponse(topping_quantities)
-        # return HttpResponse(request.POST.get('topping_quantity'))
+        return HttpResponse()
 
     else:
         # form = PizzaForm(data=request.POST)

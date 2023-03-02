@@ -55,13 +55,14 @@ class PizzaOrder(models.Model):
     ordered_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"піцца {self.pk} розміром {self.size} + топпінги"
- d
+        return f"піцца {self.pk} розміром {self.size} + топпінги, замовленно {self.ordered_at}"
+
 
 class PizzaToppings(models.Model):
     topping = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     topping_quantity = models.SmallIntegerField(validators=[MaxValueValidator(10, message='Test')])
     pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
+    cost = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f'{self.topping} у замовленні № {self.pizza_order.pk}, {self.topping_quantity} штук'
+        return f'{self.topping} у замовленні № {self.pizza_order}, {self.topping_quantity} штук. Ціна {self.cost}'
