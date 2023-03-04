@@ -9,13 +9,13 @@
 {% csrf_token %}
 
 <fieldset>
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'pizza:index' %}" method="post">
         {% csrf_token %}
 
         <p>Оберіть розмір</p>
         {% for size in sizes %}
             <input id="{{ size }}" value="{{ size.id }}"  type="radio" name="size">
-            <label for="{{ size }}">{{ size }}</label>
+            <label for="{{ size }}">{{ size }} - {{ size.price }}</label>
         {% endfor %}
 
         <p>Оберіть начінку</p>

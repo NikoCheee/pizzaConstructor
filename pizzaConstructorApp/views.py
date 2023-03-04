@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 # https://realpython.com/django-redirects/
 
@@ -13,10 +14,11 @@ def index(request):
     context = {'sizes': sizes, 'toppings': toppings, 'categories': categories}
 
     if request.method == 'POST':  # додати if form.valid
-        print(request.POST)
-        size = request.POST.get('size')
-        pizza = PizzaOrder.objects.create(size=Size.objects.get(pk=size))
+        size_rq = request.POST.get('size')
+        size = Size.objects.get(pk=size_rq)
+        pizza = PizzaOrder.objects.create(size=size, total_cost=size.price)
 
+        toppings_price = 0
         toppings_names = [x.name for x in toppings]
         for topping_name in toppings_names:
             if request.POST.get(topping_name):
@@ -24,16 +26,22 @@ def index(request):
                 quantity = request.POST.get(f"{topping_name}_quantity")
                 price = Ingredient.objects.get(pk=id).price * int(quantity)
 
-                raw = PizzaToppings.objects.create(topping=Ingredient(pk=id), topping_quantity=quantity,
-                                                   pizza_order=PizzaOrder(pizza.pk), cost=price)
-                raw.save()
+                PizzaToppings.objects.create(topping=Ingredient(pk=id), topping_quantity=quantity,
+                                             pizza_order=PizzaOrder(pizza.pk), cost=price)
+                toppings_price += price
 
-        return HttpResponse()
+        # toppings_price2 = PizzaToppings.objects.filter()  # ОРМ відфільтрувати і отримати суму
+        PizzaOrder.objects.filter(pk=pizza.pk).update(total_cost=pizza.total_cost+toppings_price)
 
-    else:
-        # form = PizzaForm(data=request.POST)
-        # return HttpResponse(f'{form}')
-        pass
+        pizza = PizzaOrder.objects.get(pk=pizza.pk)
+        context = {'test': pizza}
+
+        return render(request, 'pizzaConstructorApp/grac.html', context)  # можливо треба буде змінити на реверс
+
+    # else:
+    #     # form = PizzaForm(data=request.POST)
+    #     # return HttpResponse(f'{form}')
+    #     pass
 
     return render(request, 'pizzaConstructorApp/index.html', context)
 

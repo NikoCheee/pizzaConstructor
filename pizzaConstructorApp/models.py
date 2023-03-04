@@ -28,7 +28,7 @@ class Ingredient(models.Model):
     weight = models.DecimalField(max_digits=3, decimal_places=2)  # вага інгрідієнту додаваємого у піцу
     # кількість у наявності, якщо постійно зменшувати, то потім покаже, що цього елементу нема
     altogether = models.DecimalField(max_digits=5, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)  #  - для розділення на сторінці: м'ясо, сир, фрукти овочі, соус, база для піцци
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  #  - для розділення на сторінці: м'ясо, сир, фрукти овочі
 
     def amount_subtraction(self):
         # total = self.weight*self.amount
@@ -51,7 +51,7 @@ class Size(models.Model):  # зробити тут розміри піцц, а �
 class PizzaOrder(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     toppings = models.ManyToManyField(Ingredient, through='PizzaToppings')
-    # total_cost = models.DecimalField(max_digits=5, decimal_places=2)
+    total_cost = models.DecimalField(max_digits=6, decimal_places=2)
     ordered_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
