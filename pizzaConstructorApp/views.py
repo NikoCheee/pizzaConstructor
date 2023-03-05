@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Sum
 from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 # https://realpython.com/django-redirects/
@@ -18,7 +19,6 @@ def index(request):
         size = Size.objects.get(pk=size_rq)
         pizza = PizzaOrder.objects.create(size=size, total_cost=size.price)
 
-        toppings_price = 0
         toppings_names = [x.name for x in toppings]
         for topping_name in toppings_names:
             if request.POST.get(topping_name):
@@ -28,10 +28,9 @@ def index(request):
 
                 PizzaToppings.objects.create(topping=Ingredient(pk=id), topping_quantity=quantity,
                                              pizza_order=PizzaOrder(pizza.pk), cost=price)
-                toppings_price += price
 
-        # toppings_price2 = PizzaToppings.objects.filter()  # ОРМ відфільтрувати і отримати суму
-        PizzaOrder.objects.filter(pk=pizza.pk).update(total_cost=pizza.total_cost+toppings_price)
+        toppings_price = PizzaToppings.objects.filter(pizza_order=pizza.pk).aggregate(Sum('cost'))
+        PizzaOrder.objects.filter(pk=pizza.pk).update(total_cost=pizza.total_cost+toppings_price['cost__sum'])
 
         pizza = PizzaOrder.objects.get(pk=pizza.pk)
         context = {'test': pizza}
