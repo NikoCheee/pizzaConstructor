@@ -22,6 +22,14 @@ class Category(models.Model):
         return self.name
 
 
+class Sauce(models.Model):
+    name = models.CharField(max_length=80)
+    price = models.DecimalField(max_digits=4, decimal_places=2)
+
+    def __str__(self):
+        return f'Соус {self.name}, ціна {self.price}'
+
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=80)
     price = models.DecimalField(max_digits=4, decimal_places=2)
