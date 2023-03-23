@@ -66,6 +66,8 @@ class Size(models.Model):  # зробити тут розміри піцц, а �
 
 class PizzaOrder(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    sauce = models.ForeignKey(Sauce, on_delete=models.CASCADE)
+    cheese_board = models.ForeignKey(CheeseBoard, on_delete=models.CASCADE, blank=True, null=True)
     toppings = models.ManyToManyField(Ingredient, through='PizzaToppings')
     total_price = models.DecimalField(max_digits=6, decimal_places=2)
     ordered_at = models.DateTimeField(auto_now_add=True)
