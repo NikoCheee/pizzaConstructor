@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 # https://realpython.com/django-redirects/
@@ -17,10 +17,18 @@ def index(request):
     context = {'sizes': sizes, 'toppings': toppings, 'categories': categories, 'sauces': sauces, 'boards': boards}
 
     if request.method == 'POST':  # додати if form.valid
+        # отримую реквести з форми
         size_rq = request.POST.get('size')
-        size = Size.objects.get(pk=size_rq)
-        pizza = PizzaOrder.objects.create(size=size, total_cost=size.price)
+        sauce_rq = request.POST.get('sauce')
+        board_rq = request.POST.get('board')
 
+        # створюю об'єкти піца та її складові
+        size = Size.objects.get(pk=size_rq)
+        sauce = Sauce.objects.get(pk=sauce_rq)
+        board = CheeseBoard.objects.get(pk=board_rq)
+        pizza = PizzaOrder.objects.create(size=size, total_price=size.price)
+
+        # додаю усі топінги поточної створеної піци у базу
         toppings_names = [x.name for x in toppings]
         for topping_name in toppings_names:
             if request.POST.get(topping_name):
@@ -29,10 +37,12 @@ def index(request):
                 price = Ingredient.objects.get(pk=id).price * int(quantity)
 
                 PizzaToppings.objects.create(topping=Ingredient(pk=id), topping_quantity=quantity,
-                                             pizza_order=PizzaOrder(pizza.pk), cost=price)
+                                             pizza_order=PizzaOrder(pizza.pk), price=price)
 
-        toppings_price = PizzaToppings.objects.filter(pizza_order=pizza.pk).aggregate(Sum('cost'))
-        PizzaOrder.objects.filter(pk=pizza.pk).update(total_cost=pizza.total_cost+toppings_price['cost__sum'])
+        # рахую ціну топінгів та остаточну ціну піци з урахуванням топінгів, соусу та сирного бортика
+        toppings_price = PizzaToppings.objects.filter(pizza_order=pizza.pk).aggregate(toppings_price=Sum('price'))
+        pizza.total_price = F('total_price') + toppings_price['toppings_price'] + sauce.price + board.price
+        pizza.save()
 
         pizza = PizzaOrder.objects.get(pk=pizza.pk)
         context = {'test': pizza}

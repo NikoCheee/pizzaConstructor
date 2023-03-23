@@ -67,7 +67,7 @@ class Size(models.Model):  # зробити тут розміри піцц, а �
 class PizzaOrder(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     toppings = models.ManyToManyField(Ingredient, through='PizzaToppings')
-    total_cost = models.DecimalField(max_digits=6, decimal_places=2)
+    total_price = models.DecimalField(max_digits=6, decimal_places=2)
     ordered_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -78,7 +78,7 @@ class PizzaToppings(models.Model):
     topping = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     topping_quantity = models.SmallIntegerField(validators=[MaxValueValidator(10, message='Test')])
     pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
-    cost = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return f'{self.topping} у замовленні № {self.pizza_order}, {self.topping_quantity} штук. Ціна {self.cost}'
