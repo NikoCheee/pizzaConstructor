@@ -81,4 +81,4 @@ class PizzaToppings(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f'{self.topping} у замовленні № {self.pizza_order}, {self.topping_quantity} штук. Ціна {self.cost}'
+        return f'{self.topping} у замовленні № {self.pizza_order}, {self.topping_quantity} штук. Ціна {self.price}'
