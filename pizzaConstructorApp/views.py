@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 # https://realpython.com/django-redirects/
 
-from .models import Ingredient, PizzaOrder, Size, PizzaToppings, Category
+from .models import Ingredient, PizzaOrder, Size, PizzaToppings, Category, Sauce, CheeseBoard
 # from .forms import PizzaForm
 
 
@@ -12,7 +12,9 @@ def index(request):
     categories = Category.objects.all()
     toppings = Ingredient.objects.all()
     sizes = Size.objects.all()
-    context = {'sizes': sizes, 'toppings': toppings, 'categories': categories}
+    sauces = Sauce.objects.all()
+    boards = CheeseBoard.objects.all()
+    context = {'sizes': sizes, 'toppings': toppings, 'categories': categories, 'sauces': sauces, 'boards': boards}
 
     if request.method == 'POST':  # додати if form.valid
         size_rq = request.POST.get('size')

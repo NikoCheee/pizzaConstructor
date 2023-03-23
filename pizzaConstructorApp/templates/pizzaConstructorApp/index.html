@@ -18,9 +18,21 @@
             <label for="{{ size }}">{{ size }} - {{ size.price }}</label>
         {% endfor %}
 
+        <p>Сирний бортик?</p>
+        {% for board in boards %}
+            <input id="{{ board }}" value="{{ board.id }}"  type="radio" name="board">
+            <label for="{{ board }}">{{ board.name }} - {{ board.price }}</label>
+        {% endfor %}
+
+        <p>Оберіть соус</p>
+        {% for sauce in sauces %}
+            <input id="{{ sauce }}" value="{{ sauce.id }}"  type="radio" name="sauce">
+            <label for="{{ sauce }}">{{ sauce.name }} - {{ sauce.price }}</label>
+        {% endfor %}
+
         <p>Оберіть начінку</p>
         {% for category in categories %}
-            <p>{{ category }}</p>
+            <h3>{{ category }}</h3>
             {% for topping in toppings %}
                 {% if topping.category == category %}
                 <p><input id="{{ topping }}" value="{{ topping.id }}" name="{{topping.name}}"
