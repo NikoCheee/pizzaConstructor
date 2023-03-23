@@ -22,11 +22,16 @@ def index(request):
         sauce_rq = request.POST.get('sauce')
         board_rq = request.POST.get('board')
 
-        # створюю об'єкти піца та її складові
+        # створюю об'єкти піца та її складові, сирний бортик огортаю в try-except, бо він не обов'язковий
         size = Size.objects.get(pk=size_rq)
         sauce = Sauce.objects.get(pk=sauce_rq)
-        board = CheeseBoard.objects.get(pk=board_rq)
-        pizza = PizzaOrder.objects.create(size=size, total_price=size.price)
+        try:
+            board = CheeseBoard.objects.get(pk=board_rq)
+            base_prise = sauce.price + size.price + board.price
+            pizza = PizzaOrder.objects.create(size=size, total_price=base_prise, sauce=sauce, cheese_board=board)
+        except CheeseBoard.DoesNotExist:
+            base_prise = sauce.price + size.price
+            pizza = PizzaOrder.objects.create(size=size, total_price=base_prise, sauce=sauce)
 
         # додаю усі топінги поточної створеної піци у базу
         toppings_names = [x.name for x in toppings]
@@ -41,7 +46,7 @@ def index(request):
 
         # рахую ціну топінгів та остаточну ціну піци з урахуванням топінгів, соусу та сирного бортика
         toppings_price = PizzaToppings.objects.filter(pizza_order=pizza.pk).aggregate(toppings_price=Sum('price'))
-        pizza.total_price = F('total_price') + toppings_price['toppings_price'] + sauce.price + board.price
+        pizza.total_price = F('total_price') + toppings_price['toppings_price']
         pizza.save()
 
         pizza = PizzaOrder.objects.get(pk=pizza.pk)
