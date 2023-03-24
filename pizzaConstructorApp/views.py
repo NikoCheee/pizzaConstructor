@@ -50,7 +50,8 @@ def index(request):
         pizza.save()
 
         pizza = PizzaOrder.objects.get(pk=pizza.pk)
-        context = {'test': pizza}
+        tops = PizzaToppings.objects.filter(pizza_order__id=pizza.pk)
+        context = {'test': pizza, 'toppings': tops}
 
         return render(request, 'pizzaConstructorApp/grac.html', context)  # можливо треба буде змінити на реверс
 

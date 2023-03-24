@@ -7,6 +7,19 @@
 <body>
 <h1>Піццу сконструйовано!</h1>
 
+<h3>У вашій піцці буде</h3>
+
+<p>Розмір {{ test.size.name }} - ціна {{ test.size.price }}</p>
+<p>Соус: {{ test.sauce.name }} - ціна {{ test.sauce.price }}</p>
+
+{% if test.cheese_board %}
+    <p>Сирний бортік: {{ test.cheese_board }} - ціна {{ test.cheese_board.price }}</p>
+{% endif %}
+
+{% for element in toppings %}
+    <p>{{ element.topping }} - {{ element.quantity }} шт. Ціна {{ element.price }} </p>
+{% endfor %}
+
 Ваша піца буде коштувати {{ test.total_price }}
 
 
